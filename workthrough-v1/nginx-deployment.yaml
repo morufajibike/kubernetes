@@ -5,7 +5,7 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - nodePort: 30003
+  - nodePort: 30000 # should be a port that is exposed
     port: 8080
     targetPort: 80
   selector:
@@ -31,4 +31,4 @@ spec:
       - name: nginx
         image: nginx:1.7.9
         ports:
-        - containerPort: 80
+        - containerPort: 80 # nginx runs on port 80 by default
