@@ -1,7 +1,6 @@
 provider "aws" {
   region  = "us-east-1"
-  profile = "prestaging"
-  #profile = "cloud_sandbox"
+  profile = "cloud_sandbox"
   #access_key = "AKIAQTOLBFERFVT7FFE4"
   #secret_key = "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"
 }
@@ -41,17 +40,17 @@ module "eks_master" {
 module "scaling" {
   source = "./scaling"
 
-  cluster_name                    = var.cluster_name
-  demo_cluster_version            = module.eks_master.demo_cluster_version
-  demo_cluster_endpoint           = module.eks_master.demo_cluster_endpoint
-  demo_cluster_cert_auth_data     = module.eks_master.demo_cluster_cert_auth_data
-  launch_config_instance_type     = var.node_instance_type
-  demo_node_instance_profile_name = module.iam_node.demo_node_instance_profile_name
-  demo_node_sg_ids                = module.security.demo_node_sg_ids
-  desired_capacity                = 2
-  max_size                        = 2
-  min_size                        = 1
-  subnet_ids                      = module.networking.subnet_ids
+  cluster_name                = var.cluster_name
+  demo_cluster_version        = module.eks_master.demo_cluster_version
+  demo_cluster_endpoint       = module.eks_master.demo_cluster_endpoint
+  demo_cluster_cert_auth_data = module.eks_master.demo_cluster_cert_auth_data
+  launch_config_instance_type = "t2.medium" # m4.large
+  demo_node_instance_profile_name     = module.iam_node.demo_node_instance_profile_name
+  demo_node_sg_ids            = module.security.demo_node_sg_ids
+  desired_capacity            = 2
+  max_size                    = 2
+  min_size                    = 1
+  subnet_ids                  = module.networking.subnet_ids
 }
 
 locals {
@@ -78,14 +77,17 @@ users:
   user:
     exec:
       apiVersion: client.authentication.k8s.io/v1alpha1
-      command: aws-iam-authenticator
+      command: aws
       args:
-        - "token"
-        - "-i"
-        - ${var.cluster_name}
+        - "--region"
+        - "us-east-1"
+        - "eks"
+        - "get-token"
+        - "--cluster-name"
+        - var.cluster_name
       env:
         - name: AWS_PROFILE
-          value: prestaging
+          value: cloud_sandbox
 
 KUBECONFIG
 }
