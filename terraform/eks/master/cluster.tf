@@ -3,41 +3,27 @@ variable "vpc_id" {}
 variable "subnet_ids" {
   type = list(string) # || set(string)
 }
-variable "demo_node_iam_role_arn" {}
-
-resource "aws_security_group" "demo-cluster" {
-  name        = "terraform-eks-demo-cluster"
-  description = "Cluster communication with worker nodes"
-  vpc_id      = var.vpc_id
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "terraform-eks-demo"
-  }
-}
-
-resource "aws_security_group_rule" "demo-cluster-ingress-workstation-https" {
-  cidr_blocks       = ["86.87.88.80/32"]
-  description       = "Allow workstation to communicate with the cluster API Server"
-  from_port         = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.demo-cluster.id
-  to_port           = 443
-  type              = "ingress"
-}
+variable "demo_cluster_iam_role_arn" {}
+variable "demo_cluster_sg_ids" {}
 
 resource "aws_eks_cluster" "demo" {
-  name = var.cluster_name
-  role_arn = var.demo_node_iam_role_arn
+  name     = var.cluster_name
+  role_arn = var.demo_cluster_iam_role_arn
 
   vpc_config {
-    security_group_ids = [aws_security_group.demo-cluster.id]
-    subnet_ids	       = var.subnet_ids
+    security_group_ids = var.demo_cluster_sg_ids
+    subnet_ids         = var.subnet_ids
   }
+}
+
+output "demo_cluster_version" {
+  value = aws_eks_cluster.demo.version
+}
+
+output "demo_cluster_endpoint" {
+  value = aws_eks_cluster.demo.endpoint
+}
+
+output "demo_cluster_cert_auth_data" {
+  value = aws_eks_cluster.demo.certificate_authority[0].data
 }
