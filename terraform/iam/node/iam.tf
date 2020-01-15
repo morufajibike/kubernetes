@@ -17,6 +17,11 @@ resource "aws_iam_role" "demo-node" {
 POLICY
 }
 
+resource "aws_iam_instance_profile" "demo-node-instance-profile" {
+  name = "demo-node-instance-profile"
+  role = aws_iam_role.demo-node.name
+}
+
 resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.demo-node.name
@@ -29,6 +34,14 @@ resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKSServicePolicy" {
 
 output "demo_node_iam_role_name" {
   value = aws_iam_role.demo-node.name
+}
+
+output "demo_node_iam_role_arn" {
+  value = aws_iam_role.demo-node.arn
+}
+
+output "demo_node_instance_profile_name" {
+  value = aws_iam_instance_profile.demo-node-instance-profile.name
 }
 
 output "iam_role_policy_attachment_demo_node_eksclusterpolicy" {

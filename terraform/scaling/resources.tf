@@ -3,7 +3,7 @@ variable "demo_cluster_version" {}
 variable "demo_cluster_endpoint" {}
 variable "demo_cluster_cert_auth_data" {}
 variable "launch_config_instance_type" {}
-variable "demo_node_iam_role_name" {}
+variable "demo_node_instance_profile_name" {}
 variable "demo_node_sg_ids" {}
 variable "desired_capacity" {}
 variable "max_size" {}
@@ -33,19 +33,20 @@ locals {
   demo-node-userdata = <<USERDATA
 #!/bin/bash
 set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint var.demo_cluster_endpoint --b64-cluster-ca var.demo_cluster_cert_auth_data var.cluster_name
+/etc/eks/bootstrap.sh --apiserver-endpoint '${var.demo_cluster_endpoint}' --b64-cluster-ca '${var.demo_cluster_cert_auth_data}' '${var.cluster_name}'
 USERDATA
 }
 
-resource "aws_launch_configuration" "demo" {
+resource "aws_launch_configuration" "demo_new" {
   associate_public_ip_address = true
-  iam_instance_profile        = var.demo_node_iam_role_name
+  iam_instance_profile        = var.demo_node_instance_profile_name
   image_id                    = data.aws_ami.eks-worker.id
   instance_type               = var.launch_config_instance_type
-  name_prefix                 = "terraform-eks-demo"
+  name_prefix                 = "terraform-eks-demo-new"
   security_groups             = var.demo_node_sg_ids
   user_data_base64            = base64encode(local.demo-node-userdata)
 
+  key_name = "test-keypair"
   lifecycle {
     create_before_destroy = true
   }
@@ -53,7 +54,7 @@ resource "aws_launch_configuration" "demo" {
 
 resource "aws_autoscaling_group" "demo" {
   desired_capacity     = var.desired_capacity
-  launch_configuration = aws_launch_configuration.demo.id
+  launch_configuration = aws_launch_configuration.demo_new.id
   max_size             = var.max_size
   min_size             = var.min_size
   name                 = "terraform-eks-demo"
