@@ -16,6 +16,10 @@ resource "aws_eks_cluster" "demo" {
   }
 }
 
+output "demo_cluster_name" {
+  value = aws_eks_cluster.demo.name
+}
+
 output "demo_cluster_version" {
   value = aws_eks_cluster.demo.version
 }
