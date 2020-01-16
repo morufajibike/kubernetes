@@ -39,9 +39,9 @@ module "eks_node" {
   node_group_name        = var.node_group_name
   subnet_ids             = module.networking.subnet_ids
   demo_node_iam_role_arn = module.iam_node.demo_node_iam_role_arn
-  desired_size           = 1
-  max_size               = 2
-  min_size               = 1
+  desired_size           = var.desired_size
+  max_size               = var.max_size
+  min_size               = var.min_size
   node_instance_type     = var.node_instance_type
   kubernetes_version     = var.kubernetes_version
 }
