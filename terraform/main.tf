@@ -1,9 +1,20 @@
-provider "aws" {
-  region  = "us-east-1"
-  profile = "prestaging"
-  #profile = "cloud_sandbox"
-  #access_key = "AKIAQTOLBFERFVT7FFE4"
-  #secret_key = "aif7FbGKVqIeGbXyKdXcm7gIv5bHHzwBQalAPXgk"
+#
+# Workstation External IP
+#
+# This configuration is not required and is
+# only provided as an example to easily fetch
+# the external IP of your local workstation to
+# configure inbound EC2 Security Group access
+# to the Kubernetes cluster.
+#
+
+data "http" "workstation-external-ip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
+# Override with variable or hardcoded value if necessary
+locals {
+  workstation-external-cidr = "${chomp(data.http.workstation-external-ip.body)}/32"
 }
 
 module "iam_master" {
@@ -24,8 +35,9 @@ module "networking" {
 module "security" {
   source = "./security"
 
-  cluster_name = var.cluster_name
-  vpc_id       = module.networking.vpc_id
+  cluster_name        = var.cluster_name
+  vpc_id              = module.networking.vpc_id
+  workstation_ip_cidr = local.workstation-external-cidr
 }
 
 module "eks_master" {
@@ -38,20 +50,17 @@ module "eks_master" {
   demo_cluster_sg_ids       = module.security.demo_cluster_sg_ids
 }
 
-module "scaling" {
-  source = "./scaling"
+module "eks_node" {
+  source = "./eks/node"
 
-  cluster_name                    = var.cluster_name
-  demo_cluster_version            = module.eks_master.demo_cluster_version
-  demo_cluster_endpoint           = module.eks_master.demo_cluster_endpoint
-  demo_cluster_cert_auth_data     = module.eks_master.demo_cluster_cert_auth_data
-  launch_config_instance_type     = var.node_instance_type
-  demo_node_instance_profile_name = module.iam_node.demo_node_instance_profile_name
-  demo_node_sg_ids                = module.security.demo_node_sg_ids
-  desired_capacity                = 2
-  max_size                        = 2
-  min_size                        = 1
-  subnet_ids                      = module.networking.subnet_ids
+  cluster_name           = var.cluster_name
+  subnet_ids             = module.networking.subnet_ids
+  demo_node_iam_role_arn = module.iam_node.demo_node_iam_role_arn
+  desired_size           = 1
+  max_size               = 2
+  min_size               = 1
+  node_instance_type     = var.node_instance_type
+  kubernetes_version     = var.kubernetes_version
 }
 
 locals {
