@@ -25,6 +25,7 @@ resource "aws_eks_node_group" "demo" {
   }
 
   depends_on = [
+    var.cluster_name,
     var.demo_node_iam_role_arn
   ]
 }

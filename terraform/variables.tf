@@ -8,9 +8,24 @@ variable "node_group_name" {
 }
 
 variable "node_instance_type" {
-  default = "t2.micro"
+  default = "t2.small"
 }
 
 variable "kubernetes_version" {
   default = "1.14"
+}
+
+variable "min_size" {
+  default = 1
+  type    = number
+}
+
+variable "max_size" {
+  default = 2
+  type    = number
+}
+
+variable "desired_size" {
+  default = 2
+  type    = number
 }
