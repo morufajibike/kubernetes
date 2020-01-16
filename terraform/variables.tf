@@ -6,3 +6,7 @@ variable "cluster_name" {
 variable "node_instance_type" {
   default = "t2.micro"
 }
+
+variable "kubernetes_version" {
+  default = "1.14"
+}

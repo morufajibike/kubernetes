@@ -1,5 +1,6 @@
 variable "vpc_id" {}
 variable "cluster_name" {}
+variable "workstation_ip_cidr" {}
 
 resource "aws_security_group" "demo-cluster" {
   name        = "terraform-eks-demo-cluster"
@@ -19,7 +20,7 @@ resource "aws_security_group" "demo-cluster" {
 }
 
 resource "aws_security_group_rule" "demo-cluster-ingress-workstation-https" {
-  cidr_blocks       = ["86.145.77.159/32"]
+  cidr_blocks       = [var.workstation_ip_cidr]
   description       = "Allow workstation to communicate with the cluster API Server"
   from_port         = 443
   protocol          = "tcp"
@@ -41,8 +42,8 @@ resource "aws_security_group" "demo-node" {
   }
 
   tags = {
-    "Name"                                   = "terraform-eks-demo-node"
-    "kubernetes.io/cluster/var.cluster_name" = "owned"
+    "Name"                                      = "terraform-eks-demo-node"
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
 

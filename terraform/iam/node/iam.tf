@@ -9,7 +9,7 @@ resource "aws_iam_role" "demo-node" {
       "Effect": "Allow",
       "Action": "sts:AssumeRole",
       "Principal": {
-        "Service": "eks.amazonaws.com"
+        "Service": "ec2.amazonaws.com"
       }
     }
   ]
@@ -22,13 +22,18 @@ resource "aws_iam_instance_profile" "demo-node-instance-profile" {
   role = aws_iam_role.demo-node.name
 }
 
-resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKSWorkerNodePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.demo-node.name
 }
 
-resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKSServicePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+resource "aws_iam_role_policy_attachment" "demo-node-AmazonEKS_CNI_Policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  role       = aws_iam_role.demo-node.name
+}
+
+resource "aws_iam_role_policy_attachment" "demo-node-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   role       = aws_iam_role.demo-node.name
 }
 
@@ -42,12 +47,4 @@ output "demo_node_iam_role_arn" {
 
 output "demo_node_instance_profile_name" {
   value = aws_iam_instance_profile.demo-node-instance-profile.name
-}
-
-output "iam_role_policy_attachment_demo_node_eksclusterpolicy" {
-  value = aws_iam_role_policy_attachment.demo-node-AmazonEKSClusterPolicy
-}
-
-output "iam_role_policy_attachment_demo_node_eksservicepolicy" {
-  value = aws_iam_role_policy_attachment.demo-node-AmazonEKSServicePolicy
 }
