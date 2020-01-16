@@ -1,4 +1,5 @@
 variable "cluster_name" {}
+variable "node_group_name" {}
 variable "subnet_ids" {}
 variable "demo_node_iam_role_arn" {}
 variable "desired_size" {}
@@ -9,7 +10,7 @@ variable "kubernetes_version" {}
 
 resource "aws_eks_node_group" "demo" {
   cluster_name    = var.cluster_name
-  node_group_name = "demo"
+  node_group_name = var.node_group_name
   node_role_arn   = var.demo_node_iam_role_arn
   subnet_ids      = var.subnet_ids
 

@@ -3,6 +3,10 @@ variable "cluster_name" {
   type    = string
 }
 
+variable "node_group_name" {
+  default = "demo"
+}
+
 variable "node_instance_type" {
   default = "t2.micro"
 }
