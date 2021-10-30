@@ -1,9 +1,10 @@
 .terraform
 *.swp
 
-terraform/terraform.tfstate
-terraform/terraform.tfstate.backup
-terraform/terraform.tfstate.backup
-terraform/.terraform.tfstate.lock.info
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/terraform.tfstate.backup
+**/.terraform.tfstate.lock.info
 
-terraform/config_map_aws_auth.yaml
+**/config_map_aws_auth.yaml
+**/.terraform.lock.hcl
