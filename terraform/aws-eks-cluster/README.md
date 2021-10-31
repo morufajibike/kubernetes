@@ -23,8 +23,10 @@ Provision an EKS cluster with kubectl and Kubernetes dashboard.
    - kubectl proxy
 7. Authenticate the dashboard:
    - From another terminal (leave proxy running in one), run the following commands:
-   - Create the ClusterRoleBinding resource: `kubectl apply -f https://raw.githubusercontent.com/hashicorp/learn-terraform-provision-eks-cluster/master/kubernetes-dashboard-admin.rbac.yaml`
-   - Generate the authorization token: `kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep service-controller-token | awk '{print $1}')`
+   - Create the ClusterRoleBinding resource:
+     `kubectl apply -f https://raw.githubusercontent.com/hashicorp/learn-terraform-provision-eks-cluster/master/kubernetes-dashboard-admin.rbac.yaml`
+   - Generate the authorization token:
+     `kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep service-controller-token | awk '{print $1}')`
    - Select "Token" on the Dashboard UI then copy and paste the entire token above
 8. Access dashboard through localhost and port displayed when you started a proxy server.
 9. Congratulations, you have provisioned an EKS cluster, configured kubectl, and deployed the Kubernetes dashboard.
