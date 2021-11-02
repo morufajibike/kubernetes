@@ -8,3 +8,5 @@
 
 **/config_map_aws_auth.yaml
 **/.terraform.lock.hcl
+
+kubeconfig_demo-*
