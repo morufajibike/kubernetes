@@ -4,11 +4,13 @@ resource "helm_release" "aspnet" {
   repository = "https://marketplace.azurecr.io/helm/v1/repo"
   chart      = "aspnet-core"
 
-  /*
+  ## to get a chat repo values, use:
+  ## `helm show values <chart>`
   values = [
-    file("${path.module}/kubewatch-values.yaml")
+    file("${path.module}/vals/aspnet.yaml")
   ]
 
+  /*
   set_sensitive {
     name  = "slack.token"
     value = var.slack_app_token
