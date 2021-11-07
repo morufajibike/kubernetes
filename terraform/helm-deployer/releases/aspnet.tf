@@ -1,4 +1,4 @@
-
+/*
 resource "helm_release" "aspnet" {
   name       = "aspnet-webapp"
   repository = "https://marketplace.azurecr.io/helm/v1/repo"
@@ -10,10 +10,9 @@ resource "helm_release" "aspnet" {
     file("${path.module}/vals/aspnet.yaml")
   ]
 
-  /*
   set_sensitive {
     name  = "slack.token"
     value = var.slack_app_token
   }
-  */
 }
+*/

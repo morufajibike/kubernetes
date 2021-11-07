@@ -27,6 +27,12 @@ spec:
       serviceAccountName: {{ include "nginx.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+
+      volumes:
+        - name: nginx
+          configMap:
+            name: nginx-templates
+
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -47,6 +53,11 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
+          volumeMounts:
+            - name: nginx
+              mountPath: /usr/share/nginx/html
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
