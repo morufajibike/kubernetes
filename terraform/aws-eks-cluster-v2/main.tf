@@ -47,6 +47,8 @@ module "vpc" {
 ########## EKS ##########
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
+  version         g= "17.0.0"
+
   cluster_name    = local.cluster_name
   cluster_version = "1.21"
   subnets         = module.vpc.private_subnets
