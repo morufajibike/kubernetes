@@ -1,0 +1,89 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  namespace: demo1
+  name: todolist-gateway
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  namespace: demo1
+  name: todolist
+spec:
+  host: todolist
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  namespace: demo1
+  name: todolist-v1
+spec:
+  hosts:
+  - todolist.v1.local
+  gateways:
+  - todolist-gateway
+  http:
+    - route:
+        - destination:
+            host: todolist
+            subset: v1
+            port:
+              number: 3000
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  namespace: demo1
+  name: todolist-v2
+spec:
+  hosts:
+  - todolist.v2.local
+  gateways:
+  - todolist-gateway
+  http:
+    - route:
+        - destination:
+            host: todolist
+            subset: v2
+            port:
+              number: 3000
+---
+## normal virtualservice
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#   namespace: demo1
+#   name: todolist
+# spec:
+#   hosts:
+#   - todolist.v1.local
+#   gateways:
+#   - todolist-gateway
+#   http:
+  # - match:
+  #   - uri:
+  #       prefix: /
+  #   route:
+  #   - destination:
+  #       host: todolist
+  #       port:
+  #         number: 3000
+---

@@ -1,0 +1,28 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todolist-v2
+  namespace: demo1
+  labels:
+    app: todolist
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todolist
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: todolist
+        version: v2
+    spec:
+      serviceAccountName: todolist
+      containers:
+      - name: todolist
+        image: todo-list-app:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
