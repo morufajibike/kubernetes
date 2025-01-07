@@ -13,6 +13,8 @@ Provision an EKS cluster with kubectl and Kubernetes dashboard.
    - `kubectl get pods`.
 
 ### Optional steps
+- Use [k9s](https://k9scli.io/topics/commands/) for cluster management.
+
 The following steps are optional - only if you want to deploy a metrics server and dashboard.
 1. Deploy Kubernetes Metrics Server
    ```
