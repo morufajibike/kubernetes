@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: traffic-generator
+  labels:
+    app: traffic-generator
+spec:
+  containers:
+    - name: alpine
+      image: alpine
+      command: ["/bin/sh"]
+      # args: ["-c", "apk add --no-cache curl; while true; do curl -s -o /dev/null http://utility-api-service:8080; sleep 1; done"]
+      ### Using the wrk - a modern HTTP benchmarking tool; https://github.com/wg/wrk ###
+      ### The alternative is to ssh onto the pod and run the command below ###
+      args: ["-c", "apk add --no-cache wrk; wrk -c 5 -t 5 -d 300s -H 'Connection: Close' http://utility-api-service:8080/api/strees;"]
