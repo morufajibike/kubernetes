@@ -1,0 +1,7 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: django-config
+#   namespace: django
+# data:
+#   DJANGO_ALLOWED_HOSTS: "kubernetes.docker.internal, localhost, 127.0.0.1"
