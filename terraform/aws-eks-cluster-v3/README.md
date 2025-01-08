@@ -5,12 +5,13 @@ Provision an EKS cluster with kubectl and Kubernetes dashboard.
 [Terraform EKS](https://learn.hashicorp.com/tutorials/terraform/eks)
 
 ### Steps
-1. Create infrastructure:
+1. Configure AWS credentials/profie with [AWS IAM Identity Center](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure)
+2. Create infrastructure:
    - `terraform apply`
-2. Configure `kubectl`:
+3. Configure `kubectl`:
    - `aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)`
-3. Confirm `kubectl` is working:
-   - `kubectl get pods`.
+4. Confirm `kubectl` is working:
+   - `kubectl get pods`
 
 ### Optional steps
 - Use [k9s](https://k9scli.io/topics/commands/) for cluster management.
@@ -39,6 +40,6 @@ The following steps are optional - only if you want to deploy a metrics server a
 7. Congratulations, you have provisioned an EKS cluster, configured kubectl, and deployed the Kubernetes dashboard.
 
 ### Clean up
-Clean up resources to prevent charges:
+Clean up resources to keep billing charges at a bare minimum:
    - `terraform destroy`
 
