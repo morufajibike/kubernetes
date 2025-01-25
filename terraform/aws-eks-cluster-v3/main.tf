@@ -1,6 +1,11 @@
 
 locals {
-  cluster_name = "demo-eks-${random_string.suffix.result}"
+  cluster_name = "${var.resource_name_prefix}-eks-${random_string.suffix.result}"
+  tags = {
+    CreatedBy = "Moruf"
+    Environment = "Demo"
+    GithubRepo  = "kubernetes"
+  }
 }
 
 resource "random_string" "suffix" {
@@ -9,12 +14,13 @@ resource "random_string" "suffix" {
 }
 
 resource "aws_ecr_repository" "repo" {
-  name                 = "django-app"
+  name                 = "${var.resource_name_prefix}-sample-app"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
     scan_on_push = true
   }
+  tags = local.tags
 }
 
 ########## SECURITY GROUPS ##########
@@ -29,7 +35,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.17.0"
 
-  name                 = "demo-vpc"
+  name                 = "${var.resource_name_prefix}-vpc"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
   private_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
@@ -74,10 +80,7 @@ module "eks" {
   vpc_id = module.vpc.vpc_id
   subnet_ids         = module.vpc.private_subnets
 
-  tags = {
-    Environment = "demo"
-    GithubRepo  = "kubernetes"
-  }
+  tags = local.tags
 
   # workers_group_defaults = {
   #   root_volume_type = "gp2"
