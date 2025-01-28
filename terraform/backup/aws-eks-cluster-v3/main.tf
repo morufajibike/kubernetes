@@ -2,7 +2,7 @@
 locals {
   cluster_name = "${var.resource_name_prefix}-eks-${random_string.suffix.result}"
   tags = {
-    CreatedBy = "Moruf"
+    CreatedBy   = "Moruf"
     Environment = "Demo"
     GithubRepo  = "kubernetes"
   }
@@ -77,8 +77,8 @@ module "eks" {
     node_pools = ["general-purpose"]
   }
 
-  vpc_id = module.vpc.vpc_id
-  subnet_ids         = module.vpc.private_subnets
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
 
   tags = local.tags
 
