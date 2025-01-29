@@ -15,7 +15,9 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 ## argocd admin initial-password -n argocd
 
 ## create an application from a git repo
-## argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default
+## kubectl config set-context --current --namespace=argocd
+## argocd app create hostname --repo https://github.com/morufajibike/kubernetes.git --path sample-apps/hostname/k8 --dest-server https://kubernetes.default.svc --dest-namespace hostname
+### argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default
 
 ## sync the application
 ## argocd app sync guestbook
