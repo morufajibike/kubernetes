@@ -4,17 +4,21 @@ Provision an EKS cluster with kubectl and Kubernetes dashboard.
 ### Source
 [Terraform EKS](https://learn.hashicorp.com/tutorials/terraform/eks)
 
-### Steps
-1. Configure AWS credentials/profie with [AWS IAM Identity Center](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure)
+### Deployment Steps
+1. Configure AWS credentials/profie with [AWS IAM Identity Center](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure):
+   - `aws configure sso`
+   - `export AWS_PROFILE=AppviaSandboxAdmin`
 2. Create infrastructure:
    - `terraform apply`
-3. Configure `kubectl`:
-   - `aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)`
-4. Confirm `kubectl` is working:
-   - `kubectl get pods`
 
-### Optional steps
+### Optional Steps
 - Use [k9s](https://k9scli.io/topics/commands/) for cluster management.
+
+### Verification Steps
+1. Configure `kubectl`:
+   - `aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)`
+2. Confirm `kubectl` is working:
+   - `kubectl get pods`
 
 The following steps are optional - only if you want to deploy a metrics server and dashboard.
 1. Deploy Kubernetes Metrics Server
