@@ -22,7 +22,7 @@ resource "aws_iam_policy" "secretsmanager_access" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["secretsmanager:GetSecretValue"]
+        Action   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
         Resource = "arn:aws:secretsmanager:${var.account_region}:${var.account_id}:secret:my-app-secret*"
       }
     ]

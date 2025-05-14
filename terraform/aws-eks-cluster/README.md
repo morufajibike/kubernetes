@@ -7,7 +7,7 @@ Provision an EKS cluster with kubectl and Kubernetes dashboard.
 ### Deployment Steps
 1. Configure AWS credentials/profie with [AWS IAM Identity Center](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html#cli-configure-sso-configure):
    - `aws configure sso`
-   - `export AWS_PROFILE=AppviaSandboxAdmin`
+   - `export AWS_PROFILE=<profile-name>`
 2. Create infrastructure:
    - `terraform apply`
 

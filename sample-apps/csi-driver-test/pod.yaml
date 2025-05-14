@@ -1,0 +1,44 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: aws-secrets
+  namespace: default
+spec:
+  provider: aws
+  parameters:
+    objects: |
+      - objectName: "my-app-secret"
+        objectType: "secretsmanager"
+  # secretObjects: []  # not syncing to Kubernetes Secret, only file mount
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secret-reader
+  namespace: default
+spec:
+  serviceAccountName: irsa-enabled-sa  # Must have access to Secrets Manager
+  containers:
+    - name: reader
+      image: alpine
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          while true; do
+            echo "----- $(date) -----"
+            cat /mnt/secrets/my-app-secret || echo "Secret not found"
+            echo ""
+            sleep 30
+          done
+      volumeMounts:
+        - name: secrets-store
+          mountPath: "/mnt/secrets"
+          readOnly: true
+  volumes:
+    - name: secrets-store
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: "aws-secrets"
